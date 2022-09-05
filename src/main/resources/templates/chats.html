@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cardo:ital@1&family=Montserrat:wght@400;700&family=Open+Sans:wght@400;600;700&family=Righteous&display=swap"
+          rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/header_footer.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/chat_list.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/my-bootstrap.css}">
+
+    <title>Список чатів</title>
+
+</head>
+<body vlink="#fff" alink="#fff">
+
+<main class="main">
+    <div class="content">
+        <span th:if="${errors}" th:each="error: ${error_msgs}">
+            <div th:text="${error}" align="center" class="alert alert-danger mt-3"
+                 style="display: block; margin: 20px auto -30px auto; width: 80%">
+        </div>
+        </span>
+        <span th:if="${param.errors}" th:each="error: ${param.error_msgs}">
+            <div th:text="${error}" align="center" class="alert alert-danger mb-3"
+                 style="display: block; margin: 20px auto -30px auto; width: 80%">
+        </div>
+        </span>
+        <div class="username_and_buttons">
+            <h3 class="username" th:text="${user}">
+                TerrifficSprite
+            </h3>
+            <div class="buttons">
+                <div class="buttons_img">
+                    <a href="/logout" class="exit"><img src="img/chat_list/exit.png" alt="" class="img_button"></a>
+                </div>
+            </div>
+        </div>
+        <div class="main_block">
+
+            <div class="main_top">
+                <h3 class="mychats">
+                    Мої чати
+                </h3>
+                <a data-bs-toggle="modal" data-bs-target="#inviteModal" type="button" class="first"
+                   style="margin: 0 20px; padding: 10px 20px">Пошук</a>
+            </div>
+            <div class="main_center">
+                <span th:each="chat: ${chats}" class="chat">
+                    <a th:href="@{/chat/{id}(id=${chat.chat})}" class="every_chat" width="100%">
+                        <div class="left">
+                            <div class="chat_name" th:text="${chat.chatName}">12345678</div>
+                            <div class="last_msg" th:text="${chat.chat}">123456</div>
+                        </div>
+                    </a>
+                    <div class="favourite">
+                        <button class="copy" th:id="${chat.chatInvite}" onclick="copy(this.id)"><img
+                                src="img/chat_list/copy.png" alt="" class="favoutite_img"></button>
+                    </div>
+                </span>
+            </div>
+            <div class="main_bottom">
+                <a class="first" data-bs-toggle="modal" data-bs-target="#joinModal">Ввійти в чат</a>
+                <a class="first" data-bs-toggle="modal" data-bs-target="#createModal">Створити чат</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="modal" tabindex="-1" id="inviteModal" role="dialog" style="color: black">
+    <form method="post" th:action="@{/invite/inviteUser}" id="inviteForm">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><b>Список всіх чатів</b></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <ul class="list-group mt-1">
+                            <span th:each="chat: ${all_chats}">
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto invite-item">
+                                      <div class="fw-bold" th:text="${chat.chatName}"></div>
+                                        <small th:text="${chat.code}"></small>
+                                    </div>
+                                    <div style="margin: auto 0">
+                                        <a th:href="@{/{path}(path=${chat.chatInvite})}" th:text="Ввійти" style="color: #000;"></a>
+                                    </div>
+                                </li>
+                            </span>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                    <input name="_csrf" type="hidden" value="4bf1816c-0080-40fd-a3f3-0d50c9d4a073"/>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal" tabindex="-1" id="joinModal" role="dialog" style="color: black">
+    <form method="post" th:action="@{/chats/join}" id="send_join">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ввійти в чат</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="invite" class="form-label">Запрошення чату</label>
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                        <input type="text" class="form-control" id="invite" required name="invite"
+                               placeholder="F0sNduc4T">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                    <input name="_csrf" type="hidden" value="4bf1816c-0080-40fd-a3f3-0d50c9d4a073"/>
+                    <button type="submit" class="btn btn-primary">Ввійти</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal" tabindex="-1" id="createModal" role="dialog" style="color: black">
+    <form method="post" th:action="@{/chats/create}" id="send_create">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ввійти в чат</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    <div class="mb-3">
+                        <input th:value="${code}" value="1" name="chatInviteCode_hidden" id="a" type="hidden"/>
+                        <input id="r" type="text" name="chat_invite" disabled
+                               placeholder="Ваше запрошення" class="form-control mb-2">
+                        <script>
+                            document.getElementById("r").value = "Запрошення: " + document.getElementById("a").value;
+                            console.log(document.getElementById("a").value);
+                        </script>
+                        <button type="button" class="btn btn-primary" onclick="copyText()">Скопіювати</button>
+                    </div>
+
+                    <div class="create_name">
+                        <input type="text" name="chatName" id="chatName" class="form-control"
+                               placeholder="Придумайте назву чату" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                    <input name="_csrf" type="hidden" value="4bf1816c-0080-40fd-a3f3-0d50c9d4a073"/>
+                    <button type="submit" class="btn btn-primary">Створити</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    ///////////////////////
+
+    var map = new Map();
+    var chatNames = document.getElementsByClassName("chat_name");
+    var lastMsgs = document.getElementsByClassName("last_msg");
+
+    for(let i = 0; i < chatNames.length; i++) {
+        map.set(lastMsgs[i].textContent, chatNames[i].textContent);
+    }
+
+    console.log(map);
+
+    var inviteName = document.getElementById("inviteInput");
+    var inviteSubmit = false;
+
+    var form_join = document.getElementById("send_join");
+    var form_create = document.getElementById("send_create");
+    var form_invite = document.getElementById("inviteForm");
+
+    $("#chat_invite").hide(0);
+    $("#join_f").hide(0);
+
+    ///////////////////////
+
+    function copyText() {
+        const str = document.getElementById('a').value;
+        const el = document.createElement('textarea');
+        el.value = str;
+        el.setAttribute('readonly', '');
+        el.style.position = 'absolute';
+        el.style.left = '-9999px';
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+    }
+
+    form_create.onsubmit = function (event) {
+        event.preventDefault();
+        const str = document.getElementById('chatName').value.trim();
+        document.getElementById('chatName').value = str;
+        console.log(document.getElementById('chatName').value);
+        if (str.length !== 0)
+            form_create.submit();
+    }
+
+    form_join.onsubmit = function (event) {
+        console.log(document.getElementById('invite').value);
+        if (document.getElementById('invite').value.trim().length == 0) {
+            event.preventDefault();
+            const str = document.getElementById('invite').value.trim();
+            document.getElementById('invite').value = str;
+        } else {
+            document.getElementById('send_join').submit();
+        }
+    }
+
+    form_invite.onsubmit = function (event) {
+        if (!inviteSubmit) {
+            event.preventDefault();
+            return;
+        }
+
+        console.log(document.getElementById("chatCode").value);
+        event.preventDefault();
+    }
+
+    function copy(self) {
+        var $tmp = $("<textarea>");
+        $("body").append($tmp);
+        $tmp.val(self).select();
+        document.execCommand("copy");
+        $tmp.remove();
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+        integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"
+        integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK"
+        crossorigin="anonymous"></script>
+</body>
+</html>

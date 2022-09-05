@@ -1,0 +1,27 @@
+version: '3.1'
+
+services:
+
+  app:
+    image: 'docker-spring-boot-postgres:latest'
+    build:
+      context: .
+    container_name: app
+    depends_on:
+      - db
+    ports:
+      - "8090:8090"
+    environment:
+      - spring.datasource.url=jdbc:postgresql://db:5432/chat
+      - spring.datasource.username=root
+      - spring.datasource.password=root
+      - spring.jpa.hibernate.ddl-auto=create
+
+  db:
+    image: postgres
+    container_name: db
+    restart: always
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=chat
