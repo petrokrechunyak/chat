@@ -177,7 +177,6 @@
         map.set(lastMsgs[i].textContent, chatNames[i].textContent);
     }
 
-    console.log(map);
 
     var inviteName = document.getElementById("inviteInput");
     var inviteSubmit = false;
@@ -193,15 +192,7 @@
 
     function copyText() {
         const str = document.getElementById('a').value;
-        const el = document.createElement('textarea');
-        el.value = str;
-        el.setAttribute('readonly', '');
-        el.style.position = 'absolute';
-        el.style.left = '-9999px';
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand('copy');
-        document.body.removeChild(el);
+        navigator.clipboard.writeText(str);
     }
 
     form_create.onsubmit = function (event) {
