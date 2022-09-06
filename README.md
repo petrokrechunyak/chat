@@ -12,7 +12,7 @@
       git clone https://github.com/petrokrechunyak/chat.git
 
 - Перейти в папку проекту командою cd chat
-- Ввести в термінал команду mvn clean package
+- Ввести в термінал команду ./mvnw clean package
 - Дочекатися закінчення збірки та ввести docker-compose up
 
 
