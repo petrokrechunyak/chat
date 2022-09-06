@@ -27,7 +27,7 @@ public class InviteController {
     @GetMapping("/{invite}")
     public ModelAndView invite(@PathVariable String invite){
         ModelAndView modelAndView = new ModelAndView("redirect:/chats");
-        Chat chat = chatRepo.findByChatInvite("localhost/invite/" + invite);
+        Chat chat = chatRepo.findByChatInvite("localhost:8090/invite/" + invite);
         if(chat == null) {
             Set<String> error_msgs = new HashSet<>();
             modelAndView.addObject("errors", true);

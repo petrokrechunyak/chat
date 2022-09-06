@@ -89,10 +89,11 @@
                     $("#chat").append('<span id="chat_cont">\n' +
                         '                    <div class="my_msg__box">\n' +
                         '                        <div class="my_message">\n' +
-                        '                            <div class="msg_time">' + parsedMSG.date + '</div>\n' +
+                        '                            <b><span class="msg_time">' + parsedMSG.author + '</span></b>' +
                         '                            <div class="msg_text">\n'  +
 
                         '                            </div>\n' +
+                        '                             <div class="msg_time">' + parsedMSG.date + '</div>\n' +
                         '                        </div>\n' +
                         '                    </div>\n' +
                         '                </span>');
@@ -100,10 +101,11 @@
                     $("#chat").append('<span id="chat_cont">\n' +
                         '                    <div class="not_my_msg__box">\n' +
                         '                        <div class="not_my_message">\n' +
-                        '                            <div class="msg_time">' + parsedMSG.date + '</div>\n' +
-                        '                            <div class="msg_text">\n' +
+                        '                            <b><span class="msg_time">' + parsedMSG.author + '</span></b>' +
+                        '                            <div class="msg_text">\n'  +
 
                         '                            </div>\n' +
+                        '                             <div class="msg_time">' + parsedMSG.date + '</div>\n' +
                         '                        </div>\n' +
                         '                    </div>\n' +
                         '                </span>');

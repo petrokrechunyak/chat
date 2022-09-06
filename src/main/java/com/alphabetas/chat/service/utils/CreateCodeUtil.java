@@ -19,6 +19,6 @@ public class CreateCodeUtil {
 
    // localhost:8090
    public static String createInviteCode(){
-       return ("localhost/invite/"+createCode(5));
+       return ("localhost:8090/invite/"+createCode(5));
    }
 }

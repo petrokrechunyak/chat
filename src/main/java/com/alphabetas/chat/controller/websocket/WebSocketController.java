@@ -18,8 +18,6 @@ public class WebSocketController {
     @MessageMapping("/send_msg")
     @SendTo("/current_chat/chat")
     public Message get_and_send(Message msg){
-        Logger logger = Logger.getLogger(getClass().getName());
-        logger.info(msg.toString());
         Message new_msg = new Message(msg.getChat(), msg.getMessage(), msg.getAuthor());
         messagesRepo.save(new_msg);
         return new_msg;
